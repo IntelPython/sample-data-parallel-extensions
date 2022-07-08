@@ -20,7 +20,7 @@ setup(
     name="kde_setuptools",
     author="Intel Corporation",
     version="0.0.1",
-    description="An example of data-parallel extensions built with oneAPI",
+    description="An example of data-parallel Python extensions built with setuptools and oneAPI DPC++",
     long_description="""
     Example of using oneAPI to build data-parallel extension using setuptools.
 
