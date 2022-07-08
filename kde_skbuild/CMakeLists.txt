@@ -10,7 +10,6 @@ if (NOT DEFINED DPCTL_MODULE_PATH)
   endif()
 endif()
 
-message(STATUS "${DPCTL_MODULE_PATH}")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${DPCTL_MODULE_PATH})
 find_package(IntelDPCPP REQUIRED)
 
@@ -42,7 +41,6 @@ pybind11_add_module(${py_module_name}
     MODULE
     ${CMAKE_SOURCE_DIR}/src/pybind11_kde.cpp
 )
-message(STATUS "Dpctl_INCLUDE_DIR: ${Dpctl_INCLUDE_DIR}")
 target_include_directories(${py_module_name}
     PUBLIC ${CMAKE_SOURCE_DIR}/src ${Dpctl_INCLUDE_DIR}
 )
