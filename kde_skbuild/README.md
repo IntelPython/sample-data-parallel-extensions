@@ -4,7 +4,7 @@ Assuming `numpy`, `Cython`, `pybind11`, `pytest`, `scikit-build`, `cmake >=3.21`
 and DCP++ has been activated:
 
 ```bash
-CC=icx CXX=icpx  python setup.py develop -G Ninja -- -DDCPTL_MODULE_PATH=$(python -m dpctl --cmakedir)
+CC=icx CXX=icpx  python setup.py develop -G Ninja -- -DDPCTL_MODULE_PATH=$(python -m dpctl --cmakedir)
 pytest -m tests
 ```
 

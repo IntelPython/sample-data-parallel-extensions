@@ -6,7 +6,7 @@ if (NOT DEFINED DPCTL_MODULE_PATH)
   if (DEFINED ENV{DPCTL_MODULE_PATH})
     set(DPCTL_MODULE_PATH $ENV{DPCTL_MODULE_PATH})
   else ()
-    mesage(FATAL_ERROR "Specify DPCTL_MODULE_PATH, either via cmake or as environment varibale")
+    message(FATAL_ERROR "Specify DPCTL_MODULE_PATH, either via cmake or as environment varibale")
   endif()
 endif()
 
