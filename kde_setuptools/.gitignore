@@ -1,0 +1,6 @@
+__pycache__
+build
+*.so
+src/cy_kde.cpp
+*~
+kde_setuptools.egg-info
