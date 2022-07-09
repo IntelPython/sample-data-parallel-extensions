@@ -11,4 +11,11 @@ pytest -m tests
 Scikit-build enables building Python native extensions using CMake. This package leverage integration DPC++
 with CMake [dpcpp-cmake-integration] as well as integration of `dpctl` with CMake.
 
+**Note**: Building this package requires the using latest development version of `dpctl`.
+This can be installed using conda package manager using
+
+```bash
+conda install -c dppy/label/dev dpctl
+```
+
 [dpcpp-cmake-integration]: https://www.intel.com/content/www/us/en/develop/documentation/oneapi-dpcpp-cpp-compiler-dev-guide-and-reference/top/compiler-setup/use-the-command-line/use-cmake-with-the-intel-oneapi-dpc-c-compiler.html
