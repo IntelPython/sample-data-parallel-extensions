@@ -40,8 +40,8 @@ import numpy as np
 
 def kde_eval(
         c_dpctl.SyclQueue py_q,
-        cython.floating[:, :] x,
-        cython.floating[:, :] x_data,
+        cython.floating[:, ::1] x,
+        cython.floating[:, ::1] x_data,
         cython.floating h
 ):
     cdef cython.floating[:] f
