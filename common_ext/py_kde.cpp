@@ -78,7 +78,6 @@ py_kde_eval(
     py::object h)
 {
     if (py::isinstance<py::array_t<double>>(x) && py::isinstance<py::array_t<double>>(data)) {
-	std::cout << "Dealing with doubles" << std::endl;
 	return py_kde_eval_t<double>(
 	    exec_q,
 	    py::cast<py::array_t<double>>(x),
