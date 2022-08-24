@@ -16,6 +16,7 @@
 
 #include <CL/sycl.hpp>
 #include <cstdint>
+#include <iostream>
 
 namespace example {
 
@@ -66,14 +67,20 @@ kernel_density_estimate(
     sycl::buffer<T, 1> buf_F(f, sycl::range<1>(n), buf_props);
 
     // initialize buffer of function values with zeros
+    try {
     q.submit(
 	[&](sycl::handler &cgh) {
 	    sycl::accessor acc_F(buf_F, cgh, sycl::write_only, sycl::no_init);
 	    cgh.fill(acc_F, T(0));
 	});
+    } catch (const std::exception &e){
+      std::cout << e.what() << std::endl;
+      std::rethrow_exception(std::current_exception());
+    }
 
     // populate function values buffer
     //   perform 2D loop in parallel
+    try{
     q.submit(
 	[&](sycl::handler &cgh) {
 	    sycl::accessor acc_X(buf_X, cgh, sycl::read_only);
@@ -135,6 +142,10 @@ kernel_density_estimate(
 		    }
 		});
 	});
+    } catch (const std::exception &e) {
+      std::cout << e.what() << std::endl;
+      std::rethrow_exception(std::current_exception());
+    }
 
     return;
 }

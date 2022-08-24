@@ -16,6 +16,15 @@ from setuptools import setup, Extension
 from pybind11.setup_helpers import Pybind11Extension
 import dpctl
 
+from setuptools.command.build_ext import build_ext
+
+class custom_build_ext(build_ext):
+    def build_extensions(self):
+        self.compiler.set_executable("compiler_so", "dpcpp -fPIC")
+        self.compiler.set_executable("compiler_cxx", "dpcpp -fPIC")
+        self.compiler.set_executable("linker_so", "dpcpp -shared -fpic -fsycl-device-code-split=per_kernel")
+        build_ext.build_extensions(self)
+
 ext_modules = [
     Pybind11Extension(
         "kde_setuptools._pybind11_kde",
@@ -43,5 +52,6 @@ setup(
     """,
     license="Apache 2.0",
     url="https://intelpython.github.io/oneAPI-for-SciPy",
-    ext_modules=ext_modules
+    ext_modules=ext_modules,
+    cmdclass={"build_ext": custom_build_ext}
 )

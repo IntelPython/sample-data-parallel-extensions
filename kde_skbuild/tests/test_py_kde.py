@@ -41,6 +41,10 @@ def test_1d():
     x = np.linspace(0.1, 0.9, num=15).reshape((-1, 1))
     data = np.random.rand(128,1)
 
+    if not q.sycl_device.has_aspect_fp64:
+        x = np.asarray(x, dtype=np.float32)
+        data = np.asarray(data, dtype=np.float32)
+
     f_cy = kde_eval(q, x, data, 0.1)
     f_ref = ref_kde(x, data, 0.1)
 
@@ -61,6 +65,10 @@ def test_2d():
     ).reshape(-1, 2)
 
     data = np.random.rand(128*128, 2)
+    
+    if not q.sycl_device.has_aspect_fp64:
+        x = np.asarray(x, dtype=np.float32)
+        data = np.asarray(data, dtype=np.float32)
 
     f_cy = kde_eval(q, x, data, 0.05)
     f_ref = ref_kde(x, data, 0.05)
@@ -83,7 +91,11 @@ def test_3d():
     ).reshape(-1, 3)
 
     data = np.random.rand(16000,3)
-
+    
+    if not q.sycl_device.has_aspect_fp64:
+        x = np.asarray(x, dtype=np.float32)
+        data = np.asarray(data, dtype=np.float32)
+    
     f_cy = kde_eval(q, x, data, 0.01)
     f_ref = ref_kde(x, data, 0.01)
 

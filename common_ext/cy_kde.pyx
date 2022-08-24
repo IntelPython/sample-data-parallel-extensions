@@ -57,7 +57,7 @@ def kde_eval(
         raise ValueError("Evaluation and observation data must be non-empty")
 
     if cython.floating is float:
-        f = np.empty(x.shape[0], dtype=np.float)
+        f = np.empty(x.shape[0], dtype=np.single)
     else:
         f = np.empty(x.shape[0], dtype=np.double)
 

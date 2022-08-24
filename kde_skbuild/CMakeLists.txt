@@ -41,6 +41,7 @@ pybind11_add_module(${py_module_name}
     MODULE
     ${CMAKE_SOURCE_DIR}/src/pybind11_kde.cpp
 )
+target_link_options(${py_module_name} PRIVATE -fsycl-device-code-split=per_kernel)
 target_include_directories(${py_module_name}
     PUBLIC ${CMAKE_SOURCE_DIR}/src ${Dpctl_INCLUDE_DIR}
 )
@@ -57,6 +58,7 @@ add_cython_target(${cy_module_name} ${CMAKE_SOURCE_DIR}/src/_cython_kde.pyx CXX 
 add_library(${cy_module_name} MODULE ${_generated_src})
 
 target_include_directories(${cy_module_name} PRIVATE ${NumPy_INCLUDE_DIR} ${Dpctl_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/src)
+target_link_options(${cy_module_name} PRIVATE -fsycl-device-code-split=per_kernel)
 python_extension_module(${cy_module_name})
 install(TARGETS ${cy_module_name} LIBRARY DESTINATION kde_skbuild)
 

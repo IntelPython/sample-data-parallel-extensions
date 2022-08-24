@@ -17,7 +17,7 @@
 
 #include <CL/sycl.hpp>
 #include <limits>
-#include "kmeans.hpp"
+#include <cstdint>
 
 namespace example {
 
@@ -49,16 +49,16 @@ kmeans_host_data(
     unsigned int *labels // optional pointer to array where to give centroid assignments
     )
 {
-    const sycl::property_list buf_props = {sycl::property::buffer::use_host_ptr()};
+    const sycl::property_list buf_props {sycl::property::buffer::use_host_ptr()};
     sycl::buffer<T, 2> buf_X(data, sycl::range<2>(n, dim), buf_props);
     sycl::buffer<T, 2> buf_C(centroids, sycl::range<2>(k, dim), buf_props);
 
-    // temporary space for new centroids
+    // temporary space for new centroid coordinaties
     sycl::buffer<T, 2> buf_Cn{ sycl::range<2>(k, dim) };
+    // temporary space for point labels (index of centroid it is closest to)
+    sycl::buffer<unsigned int, 1> buf_L {sycl::range<1>(n)};
     // temporary space for new centroid sizes
     sycl::buffer<size_t, 1> buf_Cs{ sycl::range<1>(k) };
-
-    sycl::buffer<unsigned int, 1> buf_L {sycl::range<1>(n)};
 
     if (labels != nullptr) {
 	buf_L = sycl::buffer<unsigned int, 1>(labels, sycl::range<1>(n), buf_props);
@@ -71,7 +71,7 @@ kmeans_host_data(
 	[&](sycl::handler &cgh) {
 
 	    // this kernel only reads data-points and centroids
-	    //   hence no reason to copy data from device to host
+	    //   hence no reason to copy back data from device to host
 	    sycl::accessor acc_X(buf_X, cgh, sycl::read_only);
 	    sycl::accessor acc_C(buf_C, cgh, sycl::read_only);
 	    // it only assigns labels and overwrites the buffer completely
