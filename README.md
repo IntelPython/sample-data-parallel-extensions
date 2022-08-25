@@ -1,3 +1,5 @@
+![Building and testing](https://github.com/IntelPython/sample-data-parallel-extensions/actions/workflows/ci.yaml/badge.svg?branch=master)
+
 # Collection of sample oneAPI Python extensions
 
 oneAPI Python extensions is a native Python extension compiled with DPC++ and
