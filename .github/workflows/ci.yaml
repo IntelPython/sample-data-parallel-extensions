@@ -39,8 +39,10 @@ jobs:
       - name: Install dependencies
         run: |
           conda install cmake ninja
-          pip install --no-cache-dir numpy cython scikit-build pybind11 pytest
+          conda install -c intel dpcpp-cpp-rt
           conda install dpctl -c dppy/label/dev
+          pip install --no-cache-dir cython scikit-build pybind11 pytest
+          conda list
 
       - name: Build kde_setuptools
         run: |
