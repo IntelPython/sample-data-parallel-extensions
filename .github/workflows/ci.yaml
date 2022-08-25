@@ -6,11 +6,11 @@ on:
 
 jobs:
   setup_develop:
-     name: Build packages with DPC++
-     runs-on: Ubuntu-20.04
+    name: Build packages with DPC++
+    runs-on: Ubuntu-20.04
 
-     steps:
-       -name: Cancel Previous Runs
+    steps:
+      - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.6.0
         with:
           access_token: ${{ github.token }}
@@ -30,7 +30,7 @@ jobs:
 
       - name: Add conda to system path
         run: echo $CONDA/bin >> $GITHUB_PATH
-	
+
       - name: Checkout repo
         uses: actions/checkout@v2
         with:
@@ -44,15 +44,19 @@ jobs:
 
       - name: Build kde_setuptools
         run: |
+          source /opt/intel/oneapi/setvars.sh
+          export OCL_ICD_FILENAMES=libintelocl.so
           pushd kde_setuptools
           python setup.py develop
           python -m pytest tests
-	  popd
+          popd
 
       - name: Build kde_skbuild
         run: |
+          source /opt/intel/oneapi/setvars.sh
+          export OCL_ICD_FILENAMES=libintelocl.so
           pushd kde_skbuild
           CC=icx CXX=icpx  python setup.py develop -G Ninja \
                -- -DDPCTL_MODULE_PATH=$(python -m dpctl --cmakedir)
           python -m pytest tests
-	  popd
+          popd
