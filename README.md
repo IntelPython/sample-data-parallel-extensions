@@ -1,4 +1,4 @@
-![Building and testing](https://github.com/IntelPython/sample-data-parallel-extensions/actions/workflows/ci.yaml/badge.svg?branch=master)
+![Building and testing](https://github.com/IntelPython/sample-data-parallel-extensions/actions/workflows/ci.yaml/badge.svg)
 
 # Collection of sample oneAPI Python extensions
 
