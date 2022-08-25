@@ -1,0 +1,58 @@
+name: Build sample data-parallel extensions
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  setup_develop:
+     name: Build packages with DPC++
+     runs-on: Ubuntu-20.04
+
+     steps:
+       -name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.6.0
+        with:
+          access_token: ${{ github.token }}
+
+      - name: Add Intel repository
+        run: |
+          wget https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB
+          sudo apt-key add GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB
+          rm GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB
+          sudo add-apt-repository "deb https://apt.repos.intel.com/oneapi all main"
+          sudo apt-get update
+
+      - name: Install Intel OneAPI
+        run: |
+          sudo apt-get install intel-oneapi-compiler-dpcpp-cpp
+          sudo apt-get install intel-oneapi-tbb
+
+      - name: Add conda to system path
+        run: echo $CONDA/bin >> $GITHUB_PATH
+	
+      - name: Checkout repo
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: |
+          conda install cmake ninja
+          pip install --no-cache-dir numpy cython scikit-build pybind11 pytest
+          conda install dpctl -c dppy/label/dev
+
+      - name: Build kde_setuptools
+        run: |
+          pushd kde_setuptools
+          python setup.py develop
+          python -m pytest tests
+	  popd
+
+      - name: Build kde_skbuild
+        run: |
+          pushd kde_skbuild
+          CC=icx CXX=icpx  python setup.py develop -G Ninja \
+               -- -DDPCTL_MODULE_PATH=$(python -m dpctl --cmakedir)
+          python -m pytest tests
+	  popd
