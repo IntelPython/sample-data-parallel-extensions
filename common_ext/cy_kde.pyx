@@ -18,10 +18,9 @@
 cimport cython
 from libc.stdint cimport uint16_t
 
-cdef extern from "CL/sycl.hpp" namespace "sycl":
-    cdef cppclass dpcpp_queue "sycl::queue":
-        pass
-
+cimport dpctl as c_dpctl
+from dpctl.sycl cimport queue as dpcpp_queue
+from dpctl.sycl cimport unwrap_queue
 
 cdef extern from "kde.hpp" namespace "example":
     void kernel_density_estimate[T](
@@ -35,7 +34,6 @@ cdef extern from "kde.hpp" namespace "example":
         T              # smoothing parameter
     )
 
-cimport dpctl as c_dpctl
 import numpy as np
 
 def kde_eval(
@@ -46,8 +44,7 @@ def kde_eval(
 ):
     cdef cython.floating[:] f
 
-    cdef c_dpctl.DPCTLSyclQueueRef qref = py_q.get_queue_ref()
-    cdef dpcpp_queue* sycl_queue = <dpcpp_queue *>qref
+    cdef dpcpp_queue* sycl_queue = unwrap_queue(py_q.get_queue_ref())
 
     if x.shape[1] != x_data.shape[1]:
         raise ValueError("Evaluation data and observation data have different dimensions")
