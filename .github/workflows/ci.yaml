@@ -7,7 +7,7 @@ on:
 jobs:
   setup_develop:
     name: Build packages with DPC++
-    runs-on: Ubuntu-20.04
+    runs-on: Ubuntu-latest
 
     steps:
       - name: Cancel Previous Runs
@@ -38,10 +38,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          conda install cmake ninja
-          conda install -c intel dpcpp-cpp-rt
           conda install dpctl -c dppy/label/dev
-          pip install --no-cache-dir cython scikit-build pybind11 pytest
+          pip install --no-cache-dir cython scikit-build pybind11 pytest cmake ninja
           conda list
 
       - name: Build kde_setuptools
