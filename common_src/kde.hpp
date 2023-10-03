@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 #include <cstdint>
 #include <iostream>
 
@@ -51,7 +51,7 @@ T1 upper_quotient_of(T1 n, T2 wg) {
 template <typename T>
 void
 kernel_density_estimate(
-    sycl::queue q,
+    sycl::queue &q,
     std::uint16_t dim, // dimensionality of the data
     const T* x,        // points at which KDE is evaluated
     T *f,              // where values of kde(x, h) are written to

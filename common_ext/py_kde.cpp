@@ -28,7 +28,7 @@ namespace py = pybind11;
 template <typename T>
 py::array_t<T>
 py_kde_eval_t(
-    sycl::queue q,
+    sycl::queue &q,
     py::array_t<T, py::array::c_style|py::array::forcecast> x,
     py::array_t<T, py::array::c_style|py::array::forcecast> data,
     T h)
@@ -72,7 +72,7 @@ py_kde_eval_t(
 
 py::array
 py_kde_eval(
-    sycl::queue exec_q,
+    sycl::queue &exec_q,
     py::array x,
     py::array data,
     py::object h)

@@ -24,7 +24,7 @@ from dpctl.sycl cimport unwrap_queue
 
 cdef extern from "kde.hpp" namespace "example":
     void kernel_density_estimate[T](
-        dpcpp_queue,   # execution queue
+        dpcpp_queue &, # execution queue
         uint16_t,      # datadimensionality
         const T *,     # evaluation points
         T *,           # output for kde values
