@@ -38,7 +38,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          conda install dpctl -c dppy/label/dev
+          conda install python=3.10 dpctl -c dppy/label/dev -c intel -c conda-forge --override-channels
           pip install --no-cache-dir cython scikit-build pybind11 pytest cmake ninja
           conda list
 
