@@ -56,8 +56,8 @@ set(cy_module_name _cython_kde)
 # subdirectory must be known for add_cython_target bails out
 add_subdirectory(${CMAKE_SOURCE_DIR}/src)
 add_cython_target(${cy_module_name} ${CMAKE_SOURCE_DIR}/src/_cython_kde.pyx CXX PY3 OUTPUT_VAR _generated_src)
-python_add_library(${cy_module_name} MODULE ${_generated_src})
-add_sycl_to_target(TARGET ${py_module_name} SOURCES ${_generated_src})
+Python_add_library(${cy_module_name} MODULE WITH_SOABI ${_generated_src})
+add_sycl_to_target(TARGET ${cy_module_name} SOURCES ${_generated_src})
 
 target_include_directories(${cy_module_name} PRIVATE ${NumPy_INCLUDE_DIR} ${Dpctl_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/src)
 target_link_options(${cy_module_name} PRIVATE -fsycl-device-code-split=per_kernel)

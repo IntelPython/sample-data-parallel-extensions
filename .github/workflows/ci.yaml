@@ -57,6 +57,7 @@ jobs:
           export OCL_ICD_FILENAMES=libintelocl.so
           pushd kde_skbuild
           CC=icx CXX=icpx  python setup.py develop -G Ninja \
-               -- -DDPCTL_MODULE_PATH=$(python -m dpctl --cmakedir)
+               -- -DCMAKE_VERBOSE_MAKEFILE=ON \
+                  -DDPCTL_MODULE_PATH=$(python -m dpctl --cmakedir)
           python -m pytest tests
           popd
