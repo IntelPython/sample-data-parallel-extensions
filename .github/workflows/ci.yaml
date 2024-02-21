@@ -8,7 +8,7 @@ permissions: read-all
 
 jobs:
   build_and_test_kde_setuptools:
-    name: Build packages with DPC++
+    name: Build kde_setuptools with DPC++
     runs-on: Ubuntu-latest
 
     steps:
@@ -40,8 +40,10 @@ jobs:
 
       - name: Install dependencies
         run: |
-          conda install python=3.10 dpctl -c dppy/label/dev -c intel -c conda-forge --override-channels
-          pip install --no-cache-dir cython scikit-build pybind11 pytest cmake ninja
+          source $CONDA/etc/profile.d/conda.sh
+          conda create -n build_kde_setuptools python=3.10 dpctl -c dppy/label/dev -c intel -c conda-forge --override-channels
+          conda activate build_kde_setuptools
+          pip install --no-cache-dir cython pybind11 pytest cmake ninja
           conda list
 
       - name: Build kde_setuptools
@@ -49,13 +51,15 @@ jobs:
           source /opt/intel/oneapi/setvars.sh
           export OCL_ICD_FILENAMES=libintelocl.so
           pushd kde_setuptools
+          source $CONDA/etc/profile.d/conda.sh
+          conda activate build_kde_setuptools
           python setup.py develop
           python -m pytest tests
           popd
 
 
   build_and_test_kde_skbuild:
-    name: Build packages with DPC++
+    name: Build kde_skbuild with DPC++
     runs-on: Ubuntu-latest
 
     steps:
@@ -87,7 +91,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          conda install python=3.10 dpctl -c dppy/label/dev -c intel -c conda-forge --override-channels
+          source $CONDA/etc/profile.d/conda.sh
+          conda create -n build_kde_skbuild python=3.10 dpctl -c dppy/label/dev -c intel -c conda-forge --override-channels
+          conda activate build_kde_skbuild
           pip install --no-cache-dir cython scikit-build pybind11 pytest cmake ninja
           conda list
 
@@ -96,6 +102,8 @@ jobs:
           source /opt/intel/oneapi/setvars.sh
           export OCL_ICD_FILENAMES=libintelocl.so
           pushd kde_skbuild
+          source $CONDA/etc/profile.d/conda.sh
+          conda activate build_kde_skbuild
           CC=icx CXX=icpx  python setup.py develop -G Ninja \
                -- -DCMAKE_VERBOSE_MAKEFILE=ON
           python -m pytest tests
