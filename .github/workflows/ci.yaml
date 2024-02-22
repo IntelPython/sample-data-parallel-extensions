@@ -4,14 +4,16 @@ on:
   push:
     branches: [main]
 
+permissions: read-all
+
 jobs:
-  setup_develop:
-    name: Build packages with DPC++
+  build_and_test_kde_setuptools:
+    name: Build kde_setuptools with DPC++
     runs-on: Ubuntu-latest
 
     steps:
       - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.11.0
+        uses: styfle/cancel-workflow-action@0.12.1
         with:
           access_token: ${{ github.token }}
 
@@ -32,14 +34,16 @@ jobs:
         run: echo $CONDA/bin >> $GITHUB_PATH
 
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4.1.1
         with:
           fetch-depth: 0
 
       - name: Install dependencies
         run: |
-          conda install python=3.10 dpctl -c dppy/label/dev -c intel -c conda-forge --override-channels
-          pip install --no-cache-dir cython scikit-build pybind11 pytest cmake ninja
+          source $CONDA/etc/profile.d/conda.sh
+          conda create -n build_kde_setuptools python=3.10 dpctl -c dppy/label/dev -c intel -c conda-forge --override-channels
+          conda activate build_kde_setuptools
+          pip install --no-cache-dir cython pybind11 pytest cmake ninja
           conda list
 
       - name: Build kde_setuptools
@@ -47,17 +51,60 @@ jobs:
           source /opt/intel/oneapi/setvars.sh
           export OCL_ICD_FILENAMES=libintelocl.so
           pushd kde_setuptools
+          source $CONDA/etc/profile.d/conda.sh
+          conda activate build_kde_setuptools
           python setup.py develop
           python -m pytest tests
           popd
+
+
+  build_and_test_kde_skbuild:
+    name: Build kde_skbuild with DPC++
+    runs-on: Ubuntu-latest
+
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.12.1
+        with:
+          access_token: ${{ github.token }}
+
+      - name: Add Intel repository
+        run: |
+          wget https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB
+          sudo apt-key add GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB
+          rm GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB
+          sudo add-apt-repository "deb https://apt.repos.intel.com/oneapi all main"
+          sudo apt-get update
+
+      - name: Install Intel OneAPI
+        run: |
+          sudo apt-get install intel-oneapi-compiler-dpcpp-cpp
+          sudo apt-get install intel-oneapi-tbb
+
+      - name: Add conda to system path
+        run: echo $CONDA/bin >> $GITHUB_PATH
+
+      - name: Checkout repo
+        uses: actions/checkout@v4.1.1
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: |
+          source $CONDA/etc/profile.d/conda.sh
+          conda create -n build_kde_skbuild python=3.10 dpctl -c dppy/label/dev -c intel -c conda-forge --override-channels
+          conda activate build_kde_skbuild
+          pip install --no-cache-dir cython scikit-build pybind11 pytest cmake ninja
+          conda list
 
       - name: Build kde_skbuild
         run: |
           source /opt/intel/oneapi/setvars.sh
           export OCL_ICD_FILENAMES=libintelocl.so
           pushd kde_skbuild
+          source $CONDA/etc/profile.d/conda.sh
+          conda activate build_kde_skbuild
           CC=icx CXX=icpx  python setup.py develop -G Ninja \
-               -- -DCMAKE_VERBOSE_MAKEFILE=ON \
-                  -DDPCTL_MODULE_PATH=$(python -m dpctl --cmakedir)
+               -- -DCMAKE_VERBOSE_MAKEFILE=ON
           python -m pytest tests
           popd

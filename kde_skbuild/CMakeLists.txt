@@ -2,20 +2,10 @@ cmake_minimum_required(VERSION 3.22...3.27 FATAL_ERROR)
 
 project(oneapi_kde_skbuild VERSION 0.1 LANGUAGES C CXX DESCRIPTION "Example of DPC++-based Python extension")
 
-if (NOT DEFINED DPCTL_MODULE_PATH)
-  if (DEFINED ENV{DPCTL_MODULE_PATH})
-    set(DPCTL_MODULE_PATH $ENV{DPCTL_MODULE_PATH})
-  else ()
-    message(FATAL_ERROR "Specify DPCTL_MODULE_PATH, either via cmake or as environment varibale")
-  endif()
-endif()
-
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${DPCTL_MODULE_PATH})
 find_package(IntelSYCL REQUIRED)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-
 
 # Define CMAKE_INSTALL_xxx: LIBDIR, INCLUDEDIR
 include(GNUInstallDirs)
