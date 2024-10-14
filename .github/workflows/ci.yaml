@@ -41,7 +41,7 @@ jobs:
       - name: Install dependencies
         run: |
           source $CONDA/etc/profile.d/conda.sh
-          conda create -n build_kde_setuptools python=3.10 dpctl -c dppy/label/dev -c https://software.repos.intel.com/python/conda -c conda-forge --override-channels
+          conda create -n build_kde_setuptools python=3.11 dpctl setuptools"<70" -c dppy/label/dev -c https://software.repos.intel.com/python/conda -c conda-forge --override-channels
           conda activate build_kde_setuptools
           pip install --no-cache-dir cython pybind11 pytest cmake ninja
           conda list
